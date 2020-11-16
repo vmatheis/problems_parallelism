@@ -7,55 +7,68 @@ package net.htlgrieskirchen.pos3.pcp;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class Storage { 
+public class Storage {
+
     private final ArrayBlockingQueue<Integer> queue;
-    
+
     private int fetchedCounter;
     private int storedCounter;
     private int underflowCounter;
     private int overflowCounter;
     private boolean productionComplete;
-    
-    public Storage() {
-        // implement this
+
+    public Storage(ArrayBlockingQueue<Integer> queue, int fetchedCounter, int storedCounter, int underflowCounter, int overflowCounter, boolean productionComplete) {
+        this.queue = queue;
+        this.fetchedCounter = fetchedCounter;
+        this.storedCounter = storedCounter;
+        this.underflowCounter = underflowCounter;
+        this.overflowCounter = overflowCounter;
+        this.productionComplete = productionComplete;
     }
-    
+
     public synchronized boolean put(Integer data) throws InterruptedException {
-        // implement this
-        return false;
+//        queue.put(data);
+        if (storedCounter < 11) {
+//            queue.put(data);
+            storedCounter++;
+            return true;
+        } else {
+            overflowCounter++;
+            return false;
+        }
     }
- 
-    public synchronized Integer get() {
-        // implement this
-        return null;
+
+    public synchronized Integer get() {        
+        if(queue.isEmpty()){
+            underflowCounter++;
+            return null;
+        } else{
+            fetchedCounter++;
+            return queue.poll();
+        }
     }
 
     public boolean isProductionComplete() {
-        // implement this
-        return false;
+        return productionComplete;
     }
 
     public void setProductionComplete() {
-        // implement this
+        productionComplete = true;
     }
 
     public int getFetchedCounter() {
-        // implement this
-        return -1;
+        return fetchedCounter;
     }
 
     public int getStoredCounter() {
-        // implement this
-        return -1;
+        return storedCounter;
     }
 
     public int getUnderflowCounter() {
-        // implement this
-        return -1;
+        return underflowCounter;
     }
 
     public int getOverflowCounter() {
-        // implement this
-        return -1;
+        return overflowCounter;
     }
 }
