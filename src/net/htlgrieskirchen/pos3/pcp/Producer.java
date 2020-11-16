@@ -11,14 +11,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Producer implements Runnable {
-
+    
     private final String name;
     private final Storage storage;
     private final int sleepTime;
-
+    
     private final List<Integer> sent;
     private final int numberOfItems;
-
+    
     public Producer(String name, Storage storage, int sleepTime, int numberOfItems) {
         this.name = name;
         this.storage = storage;
@@ -26,26 +26,27 @@ public class Producer implements Runnable {
         this.numberOfItems = numberOfItems;
         this.sent = new ArrayList<>();
     }
-
+    
     public List<Integer> getSent() {
         return this.sent;
     }
-
+    
     @Override
     public void run() {
         for (int i = 0; i < numberOfItems; i++) {
-            do {
-                try {
-                    if (storage.put(i)) {
-                        sent.add(i);
+            while (!sent.contains(i)) {
+                if (storage.put(i)) {
+                    sent.add(i);                    
+                } else {
+                    try {
+                        Thread.sleep(sleepTime);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } while (!sent.contains(i));
+            }            
         }
         storage.setProductionComplete();
     }
-
+    
 }

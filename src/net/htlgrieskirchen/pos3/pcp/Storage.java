@@ -38,20 +38,12 @@ public class Storage {
     }
 
     public synchronized Integer get() {
-//        if (queue.isEmpty()) {
-//            underflowCounter++;
-//            return null;
-//        } else {
-//            fetchedCounter++;
-//            return queue.poll(); //queue.peek() wenn nicht removed werden soll
-//        }
-        Integer erg = queue.poll();
-        if (erg == null) {
+        if (queue.isEmpty()) {
             underflowCounter++;
-            return erg;
+            return null;
         } else {
             fetchedCounter++;
-            return erg;
+            return queue.poll(); //queue.peek() wenn nicht removed werden soll
         }
     }
 
