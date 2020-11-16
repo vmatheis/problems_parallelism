@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.junit.Assert;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -19,6 +18,7 @@ import org.junit.Test;
  */
 public class ExecutorTest {
 
+    //funktioniert
     @Test
     public void testRun1_1() throws Exception {
         Executor runner = new Executor();
@@ -28,6 +28,7 @@ public class ExecutorTest {
         testBoundaries(result, 20);
     }
 
+    //funktioniert
     @Test
     public void testRun1_2() throws Exception {
         Executor runner = new Executor();
@@ -55,6 +56,7 @@ public class ExecutorTest {
         testListEquality(result, 20);
     }
 
+    //funktioniert
     @Test
     public void testRun2_1() throws Exception {
         Executor runner = new Executor();
@@ -66,6 +68,7 @@ public class ExecutorTest {
         assertTrue(result.getUnderflowCounter() > 0);
     }
 
+    //funktioniert
     @Test
     public void testRun2_2() throws Exception {
         Executor runner = new Executor();
@@ -75,6 +78,7 @@ public class ExecutorTest {
         testProducerSent(result, 100);
     }
 
+    //funktioniert
     @Test
     public void testRun2_3() throws Exception {
         Executor runner = new Executor();

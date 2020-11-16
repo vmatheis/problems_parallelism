@@ -17,19 +17,18 @@ public class Storage {
     private int overflowCounter;
     private boolean productionComplete;
 
-    public Storage(ArrayBlockingQueue<Integer> queue, int fetchedCounter, int storedCounter, int underflowCounter, int overflowCounter, boolean productionComplete) {
-        this.queue = queue;
-        this.fetchedCounter = fetchedCounter;
-        this.storedCounter = storedCounter;
-        this.underflowCounter = underflowCounter;
-        this.overflowCounter = overflowCounter;
-        this.productionComplete = productionComplete;
+    public Storage() {
+        this.queue = new ArrayBlockingQueue<>(10);
+        this.fetchedCounter = 0;
+        this.storedCounter = 0;
+        this.underflowCounter = 0;
+        this.overflowCounter = 0;
+        this.productionComplete = false;
     }
 
-    public synchronized boolean put(Integer data) throws InterruptedException {
-//        queue.put(data);
-        if (storedCounter < 11) {
-//            queue.put(data);
+    public synchronized boolean put(Integer data) {
+        boolean offer = queue.offer(data);
+        if (offer) {
             storedCounter++;
             return true;
         } else {
@@ -38,37 +37,45 @@ public class Storage {
         }
     }
 
-    public synchronized Integer get() {        
-        if(queue.isEmpty()){
+    public synchronized Integer get() {
+//        if (queue.isEmpty()) {
+//            underflowCounter++;
+//            return null;
+//        } else {
+//            fetchedCounter++;
+//            return queue.poll(); //queue.peek() wenn nicht removed werden soll
+//        }
+        Integer erg = queue.poll();
+        if (erg == null) {
             underflowCounter++;
-            return null;
-        } else{
+            return erg;
+        } else {
             fetchedCounter++;
-            return queue.poll();
+            return erg;
         }
     }
 
     public boolean isProductionComplete() {
-        return productionComplete;
+        return this.productionComplete;
     }
 
     public void setProductionComplete() {
-        productionComplete = true;
+        this.productionComplete = true;
     }
 
     public int getFetchedCounter() {
-        return fetchedCounter;
+        return this.fetchedCounter;
     }
 
     public int getStoredCounter() {
-        return storedCounter;
+        return this.storedCounter;
     }
 
     public int getUnderflowCounter() {
-        return underflowCounter;
+        return this.underflowCounter;
     }
 
     public int getOverflowCounter() {
-        return overflowCounter;
+        return this.overflowCounter;
     }
 }
